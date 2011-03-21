@@ -1,0 +1,51 @@
+Summary: 
+
+This sets up cucumber and capybara to test sites through apache.  It was specifically written for php but can be used for any framework.
+
+Steps:
+
+- Install the following gems: cucumber mechanize rspec capybara capybara-mechanize
+- Add a dump somewhere in your project (db/dumps)
+- setup virthost for the test site
+  - sample virthost:
+  <VirtualHost *:80>
+      DocumentRoot "/srv/yoursitehere_test/public"
+      ServerName test.yoursitehere.com
+      ServerAlias test.yoursitehere.com
+      ErrorLog "/private/var/log/apache2/local.yoursitehere_test.com-error_log"
+      CustomLog "/private/var/log/apache2/local.yoursitehere_test.com-access_log" common
+  </VirtualHost>
+- Copy the features folder to your php public folder.  Make sure the htaccess gets copied as well to stop access to the tests from the browser
+- Setup the support/env.rb file
+  - set capybara app and app_host
+  - set mysql location
+    - the system currently uses a naive check to see if you are on osx
+    - if you add the link to your path, this code can be removed
+  - set mysql admin user
+  - set mysql admin user password
+  - set database location
+  - set database name
+  - set database apache user name
+  - set database apache user password 
+  - set path to your database dump
+  - set the database_config_path
+    - any functions or additional database connections in your connection file should be duplicated when the file is rewritten for testing
+  - if the database should not be reseeded before every test, remove the database drop and create, and uncomment the database reset in the rollback_to_seed_data function
+- setup support/paths.rb
+  - change the base path location from test.yoursitehere to your site name in the virthost
+- setup step_definitions/web_steps.rb
+  - look at the alternative version of the 'should be on' step that is used for absolute links
+  - if an updated set of generic capybara steps are needed, this step will need to be changed
+
+Additional notes:
+
+- setting the database to test
+  - when launched, the script will read the database connection file, store it, and overwrite it with test data
+  - when tests are complete, the original database connection file will be restored
+  - if cucumber crashes or is killed, you may lose your database connectio information.
+  - there is currently no check to make sure the correct database connection file is in place before or after a test
+- If you want to prep or reset a table after a test, use the support/hooks.rb file.  
+  - note that it writes to the /tmp directory
+- there is a 'path "(^")"' step in support/paths that will direct link to a path
+  - other paths can be created as normal if you want to name your pages
+- selenium tests are supported by adding a @javascript tag
