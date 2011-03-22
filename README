@@ -5,6 +5,7 @@ This sets up cucumber and capybara to test sites through apache.  It was specifi
 Steps:
 
 - Install the following gems: cucumber mechanize rspec capybara capybara-mechanize
+- If using selenium testing on a headless box, install xvfb and firefox
 - Add a dump somewhere in your project (db/dumps)
 - setup virthost for the test site
   - sample virthost:

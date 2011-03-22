@@ -85,12 +85,23 @@ run("echo \"GRANT ALL PRIVILEGES ON #{@@test_database_name}.* TO #{@@test_databa
 # seed test database
 run("#{@@mysql} #{@@test_database_username} #{@@test_database_password} #{@@test_database_name} < #{@path_to_seed_data};", "Seeding database")
 
+# setup display for selenium tests using xvfb
+# puts "Cucumber test with Xvfb and firefox"
+ENV['DISPLAY'] = ":99"
+run("Xvfb :99 -ac -screen 0 1024x768x16 2>/dev/null >/dev/null &", "Setup xvfb on display 99")
+run("firefox --display=:99 2>/dev/null >/dev/null &", "Launch firefox on display 99")
+
+
 
 # Switch back to whatever was loaded originally
 def rollback_to_seed_data
   File.open(@database_config_path, "w") do |file|
     file.puts @original_database_config
   end
+
+  run("killall Xvfb")
+  run("killall firefox")
+
   # puts "Cucumber finished, Resetting test database"
   # run "mysql -u #{@@test_database_username} --password=#{@@test_database_password} #{@@test_database_name} < #{@path_to_seed_data}"
 end
