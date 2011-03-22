@@ -83,7 +83,7 @@ run("echo \"CREATE DATABASE #{@@test_database_name};\" | #{@@mysql} #{@@mysql_ad
 # add privileges to the test database
 run("echo \"GRANT ALL PRIVILEGES ON #{@@test_database_name}.* TO #{@@test_database_username}@#{@@test_database_location} IDENTIFIED BY '#{@@test_database_password}'\" | #{@@mysql} #{@@mysql_admin_user} #{@@mysql_admin_password}", "Adding test user privileges to database")
 # seed test database
-run("#{@@mysql} #{@@test_database_username} #{@@test_database_password} #{@@test_database_name} < #{@path_to_seed_data};", "Seeding database")
+run("#{@@mysql} #{@@test_database_username} #{@@test_database_password} #{@@test_database_name} < \"#{@path_to_seed_data}\";", "Seeding database")
 
 # setup display for selenium tests using xvfb
 # puts "Cucumber test with Xvfb and firefox"
