@@ -50,3 +50,5 @@ Additional notes:
 - there is a 'path "(^")"' step in support/paths that will direct link to a path
   - other paths can be created as normal if you want to name your pages
 - selenium tests are supported by adding a @javascript tag
+- the admin user needs a -u and -p before their login credentials, the test database user does not
+  - this avoids extra password requests when mysql is given an empty -p argument

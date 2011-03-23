@@ -55,8 +55,8 @@ end
 @@test_database_name = "yoursitehere_test_db"
 
 # mysql user used in the conn file
-@@test_database_username = "-u" + "root"
-@@test_database_password = "-p" + "password"
+@@test_database_username = "root"
+@@test_database_password = "password"
 
 # Path for the db dump used to seed the tests
 @path_to_seed_data = File.dirname(__FILE__)+"./db/dumps/yoursitehere_db_dump.sql"
