@@ -47,6 +47,7 @@ else
 end
 
 # mysql user with permissions to create database and grant permissions
+# these have the -u and -p arguments because you get additional dialogues if the mysql root password is blank
 @@mysql_admin_user = "-u" + "root"
 @@mysql_admin_password = "-p" + "password"
 
@@ -83,7 +84,7 @@ run("echo \"CREATE DATABASE #{@@test_database_name};\" | #{@@mysql} #{@@mysql_ad
 # add privileges to the test database
 run("echo \"GRANT ALL PRIVILEGES ON #{@@test_database_name}.* TO #{@@test_database_username}@#{@@test_database_location} IDENTIFIED BY '#{@@test_database_password}'\" | #{@@mysql} #{@@mysql_admin_user} #{@@mysql_admin_password}", "Adding test user privileges to database")
 # seed test database
-run("#{@@mysql} #{@@test_database_username} #{@@test_database_password} #{@@test_database_name} < \"#{@path_to_seed_data}\";", "Seeding database")
+run("#{@@mysql} -u#{@@test_database_username} -p#{@@test_database_password} #{@@test_database_name} < \"#{@path_to_seed_data}\";", "Seeding database")
 
 # setup display for selenium tests using xvfb
 # puts "Cucumber test with Xvfb and firefox"
