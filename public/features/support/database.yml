@@ -1,0 +1,5 @@
+---
+- db_name: example_db
+  user: root
+  password: pass
+  schema: example_db_schema.sql

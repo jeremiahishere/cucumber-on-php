@@ -1,0 +1,2 @@
+load File.expand_path('../features/support/', __FILE__) + '/cucumber.rake'
+require 'rake'
