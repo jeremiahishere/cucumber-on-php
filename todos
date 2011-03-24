@@ -6,8 +6,4 @@ Setup system to pull the database schema when starting
 
 save the connection data to a file in the features folder in case cucumber crashes
 
-refactor the env file into functions/includes to setup database and setup connections
-
-setup a rakefile with tasks for running all, fast, and javascript tests
-
-
+fix mysql url in console commands

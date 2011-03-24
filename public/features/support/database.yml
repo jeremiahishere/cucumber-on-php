@@ -1,5 +1,7 @@
 ---
-- db_name: example_db
-  user: root
-  password: pass
+- name: example_db
+  location: localhost
   schema: example_db_schema.sql
+  user: example_user
+  password: password
+  var_name: MAIN_CONN
