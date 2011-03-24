@@ -100,6 +100,8 @@ def rollback_to_seed_data
     file.puts @original_database_config
   end
 
+  run("echo \"DROP DATABASE #{@@test_database_name};\" | #{@@mysql} #{@@mysql_admin_user} #{@@mysql_admin_password};", "Dropping test database")
+
   run("killall Xvfb")
   run("killall firefox")
 
