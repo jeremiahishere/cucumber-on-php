@@ -23,13 +23,15 @@ Steps:
   - schema: schema file, automatically looks at features/support/db_schemas
   - user: mysql user
   - password: mysql user password
+  - admin_user: mysql administrator user to override the default in env.rb
+  - admin_password: mysql administrator password to override the default in env.rb
   - var_name: variable name used in the conn.php file as the result of mysql_selectdb
 - Setup the support/env.rb file
   - set capybara app and app_host
-  - set mysql admin user
-  - set mysql admin user password
+  - set default mysql admin user and password
   - set the database_config_path
     - any functions or additional database connections in your connection file should be duplicated when the file is rewritten for testing
+    - if the backup_database_config_file is set, it will create a new file with your connection information in the current directory
   - if the database should not be reseeded before every test, remove the database drop and create, and uncomment the database reset in the rollback_to_seed_data function
 - setup support/paths.rb
   - change the base path location from test.yoursitehere to your site name in the virthost
@@ -51,3 +53,14 @@ Additional notes:
 - selenium tests are supported by adding a @javascript tag
 - the admin user needs a -u and -p before their login credentials, the test database user does not
   - this avoids extra password requests when mysql is given an empty -p argument
+
+Future work:
+
+- a more intelligent restoration of the database connection file is needed
+  - if cucumber crashes or is killed, the at_exit does not necessarily run
+  - a series of backups needs to be managed and used to restore the connection file
+  - an additional task rake cucumber:cleanup should remove the test databases, and restore the connection file from the most recent backup
+- automatic database schema generation
+  - add a system for storing information for the current development/production database
+  - if it exists and the currently dumped schema is old, dump the schema into the schemas folder and use it for the next test
+  - manage schemas to avoid generating too many

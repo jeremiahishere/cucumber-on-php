@@ -1,7 +1,0 @@
-Setup system to pull the database schema when starting
-- save the database schema to a file in the features folder
-- check to see if the most recent database schema is current
-- delete any old ones
-- --no-data
-
-save the connection data to a file in the features folder in case cucumber crashes

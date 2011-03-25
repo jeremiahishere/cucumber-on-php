@@ -24,6 +24,7 @@ World(Test::Unit::Assertions)
 # The location of the current database connection file 
 @database_config_path = File.dirname(__FILE__)+"/../../includes/conn.php"
 @original_database_config = File.read(@database_config_path)
+@backup_database_config_file = "conn.php.backup"
 
 # mysql user with permissions to create database and grant permissions
 # these have the -u and -p arguments because you get additional dialogues if the mysql root password is blank
@@ -60,6 +61,13 @@ File.open(@database_config_path, "w") do |file|
   "
 end
 
+# write a backup file for the connection information if a backup file is specified
+unless @backup_database_config_file.blank?
+  File.open(@backup_database_config_file, "w") do |file|
+    file.puts(@original_database_config)
+  end
+end
+
 def drop_databases
   admin_user = "-u" + db['admin_user'] ? db['admin_user'] : @default_mysql_admin_user
   admin_pass = db['admin_passowrd'] ? db['admin_password'] : @default_mysql_admin_password
@@ -77,7 +85,12 @@ def rollback_to_seed_data
   end
 end
 
+def remove_backup_config
+  %x{rm #{@backup_database_config_file}}
+end
+
 at_exit do
   rollback_to_seed_data
   drop_databases
+  remove_backup_config
 end
