@@ -5,5 +5,3 @@ Setup system to pull the database schema when starting
 - --no-data
 
 save the connection data to a file in the features folder in case cucumber crashes
-
-fix mysql url in console commands

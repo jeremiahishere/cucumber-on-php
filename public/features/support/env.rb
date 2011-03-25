@@ -38,14 +38,14 @@ mysql_connect_output = ""
   admin_user = "-u" + db['admin_user'] ? db['admin_user'] : @default_mysql_admin_user
   admin_pass = db['admin_passowrd'] ? db['admin_password'] : @default_mysql_admin_password
   admin_pass = "-p" + admin_pass unless admin_pass.blank?
-  admin_user_info = admin_user + " " admin_pass
+  admin_user_info = admin_user + " " + admin_pass
 
   schema_location = File.dirname(__FILE__) + "db_schemas/" + db['schema']
   # drop, create, give permissions, seed
-  %x{echo \"DROP DATABASE #{db['name']};\" | mysql #{db['location']} #{admin_user_info};} 
-  %x{echo \"CREATE DATABASE #{db['name']};\" | mysql #{db['location']} #{admin_user_info};"}
-  %x{echo \"GRANT ALL PRIVILEGES ON #{db['name']}.* TO #{db['user']}@#{db['location']} IDENTIFIED BY '#{db['password']}'\" | mysql #{db['location']} #{admin_user_info}"}
-  %x{mysql -u#{db['user']} -p#{db['passowrd']} #{db['name']} < \"#{schema_location}\";"}
+  %x{echo \"DROP DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};} 
+  %x{echo \"CREATE DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};"}
+  %x{echo \"GRANT ALL PRIVILEGES ON #{db['name']}.* TO #{db['user']}@#{db['location']} IDENTIFIED BY '#{db['password']}'\" | mysql -h#{db['location']} #{admin_user_info}"}
+  %x{mysql -h#{db['location']} -u#{db['user']} -p#{db['passowrd']} #{db['name']} < \"#{schema_location}\";"}
 
   mysql_connect_output += "$#{db['var_name']} = mysql_connect(\"#{db['location']}\", \"#{db['user']}\", \"#{db['password']}\");\nmysql_selectdb(\"#{db['name']}\", $#{db['var_name']});\n"
 end
@@ -64,9 +64,9 @@ def drop_databases
   admin_user = "-u" + db['admin_user'] ? db['admin_user'] : @default_mysql_admin_user
   admin_pass = db['admin_passowrd'] ? db['admin_password'] : @default_mysql_admin_password
   admin_pass = "-p" + admin_pass unless admin_pass.blank?
-  admin_user_info = admin_user + " " admin_pass
+  admin_user_info = admin_user + " " + admin_pass
   @databases.each do |db|
-    %x{echo \"DROP DATABASE #{db['name']};\" | mysql #{db['location']} #{admin_user_info};"}
+    %x{echo \"DROP DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};"}
   end
 end
 
