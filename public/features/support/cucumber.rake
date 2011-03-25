@@ -4,19 +4,26 @@ begin
   namespace :cucumber do
 
     task :ok do
-      %x{cucumber --format progress --strict --tags ~@wip features}
+      %x{cucumber --format progress --strict --tags ~@wip features 1>&2}
     end
 
     task :wip do
-      %x{cucumber --format progress --strict --tags @wip:3 --wip features}
+      %x{cucumber --format progress --strict --tags @wip:3 --wip features 1>&2}
     end
 
     task :no_js do
-      %x{cucumber --format progress --strict --tags @javascript features}
+      %x{cucumber --format progress --strict --tags @javascript features 1>&2}
     end
 
     task :js do
-      %x{cucumber --format progress --strict --tags @javascript features}
+      %x{cucumber --format progress --strict --tags @javascript features 1>&2}
+    end
+
+    task :hudson_format do
+      report_path = 'features/reports/'
+      rm_rf report_path
+      mkdir_p report_path
+      %x{cucumber --format junit --out #{report_path}}
     end
 
     task :setup_js_with_xvfb do
@@ -43,6 +50,8 @@ begin
     desc 'Run all features'
     task :all => [:ok, :wip]
   end
+
+  task :hudson => [:setup_js_with_xvfb, :hudson_format, :kill_js]
   
   desc 'Alias for cucumber:ok'
   task :cucumber => ['cucumber:setup_js_with_xvfb', 'cucumber:ok', 'cucumber:kill_js']
