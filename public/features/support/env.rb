@@ -36,13 +36,13 @@ World(Test::Unit::Assertions)
 @default_mysql_admin_password = "password"
 
 puts("Loading database information")
-@dbm = DatabaseManager.new(@default_mysql_admin_user, @default_mysql_admin_password)
+@@dbm = DatabaseManager.new(@default_mysql_admin_user, @default_mysql_admin_password)
 # read the database information
 @databases = YAML.load(File.open('features/support/database.yml').read)
 @databases.each do |db|
-  @dbm.add_database(db)
+  @@dbm.add_database(db)
 end
-mysql_connect_output = @dbm.get_php_connect_info
+mysql_connect_output = @@dbm.get_php_connect_info
 
 # Overwrite the conn file with the new database and authentication 
 File.open(@database_config_path, "w") do |file|
@@ -62,7 +62,7 @@ unless @backup_database_config_file.empty?
 end
 
 def drop_databases
-  @dbm.drop_all_databases
+  @@dbm.drop_all_databases
 end
 
 # Switch back to whatever was loaded originally

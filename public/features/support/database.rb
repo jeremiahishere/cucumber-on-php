@@ -58,6 +58,6 @@ class Database
   # runs a query on the database
   # assumes everything has been escaped
   def query(sql)
-    return mysql.query(sql)
+    return @mysql.query(sql)
   end
 end
