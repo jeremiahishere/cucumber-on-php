@@ -5,3 +5,4 @@
   user: example_user
   password: password
   var_name: MAIN_CONN
+  default: true

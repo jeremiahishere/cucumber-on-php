@@ -16,6 +16,10 @@ Capybara.app_host = 'http://test.yoursitehere.com'
 Capybara.default_selector = :css
 Capybara.default_driver = :mechanize 
 
+# database
+require 'mysql2'
+require File.dirname(__FILE__) + '/database.rb'
+require File.dirname(__FILE__) + '/database_manager.rb'
 
 require 'test/unit/assertions'
 World(Test::Unit::Assertions)
@@ -31,27 +35,14 @@ World(Test::Unit::Assertions)
 @default_mysql_admin_user = "root"
 @default_mysql_admin_password = "password"
 
-puts "Loading database information"
+puts("Loading database information")
+@dbm = DatabaseManager.new(@default_mysql_admin_user, @default_mysql_admin_password)
 # read the database information
 @databases = YAML.load(File.open('features/support/database.yml').read)
-# iterate over the databases, drop, create and seed, build the mysql_connect statements as well
-mysql_connect_output = ""
 @databases.each do |db|
-  puts "Setting up #{db['name']}"
-  admin_user = "-u" + db['admin_user'] ? db['admin_user'] : @default_mysql_admin_user
-  admin_pass = db['admin_password'] ? db['admin_password'] : @default_mysql_admin_password
-  admin_pass = "-p" + admin_pass unless admin_pass.empty?
-  admin_user_info = admin_user + " " + admin_pass
-
-  schema_location = File.dirname(__FILE__) + "/db_schemas/" + db['schema']
-  # drop, create, give permissions, seed
-  %x{echo \"DROP DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};} 
-  %x{echo \"CREATE DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};}
-  %x{echo \"GRANT ALL PRIVILEGES ON #{db['name']}.* TO #{db['user']}@#{db['location']} IDENTIFIED BY '#{db['password']}'\" | mysql -h#{db['location']} #{admin_user_info}}
-  %x{mysql -h#{db['location']} -u#{db['user']} -p#{db['password']} #{db['name']} < \"#{schema_location}\";}
-
-  mysql_connect_output += "$#{db['var_name']} = mysql_connect(\"#{db['location']}\", \"#{db['user']}\", \"#{db['password']}\");\nmysql_selectdb(\"#{db['name']}\", $#{db['var_name']});\n"
+  @dbm.add_database(db)
 end
+mysql_connect_output = @dbm.get_php_connect_info
 
 # Overwrite the conn file with the new database and authentication 
 File.open(@database_config_path, "w") do |file|
@@ -71,13 +62,7 @@ unless @backup_database_config_file.empty?
 end
 
 def drop_databases
-  @databases.each do |db|
-    admin_user = "-u" + (db['admin_user'] ? db['admin_user'] : @default_mysql_admin_user)
-    admin_pass = (db['admin_password'] ? db['admin_password'] : @default_mysql_admin_password)
-    admin_pass = "-p" + admin_pass unless admin_pass.empty?
-    admin_user_info = admin_user + " " + admin_pass
-    %x{echo \"DROP DATABASE #{db['name']};\" | mysql -h#{db['location']} #{admin_user_info};}
-  end
+  @dbm.drop_all_databases
 end
 
 # Switch back to whatever was loaded originally
