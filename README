@@ -67,3 +67,7 @@ Future work:
   - if it exists and the currently dumped schema is old, dump the schema into the schemas folder and use it for the next test
   - manage schemas to avoid generating too many
 - add a cucumber.yml with a profile so standard cucumber rake tasks can be used
+
+Bug Fixes:
+
+- change the location parameter in database.yml to host
