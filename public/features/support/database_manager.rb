@@ -51,7 +51,7 @@ class DatabaseManager
   end
 
   # queries the specified database
-  def query(db_name, sql)
+  def query(sql, db_name = @default_db_name)
     if @dbs.has_key?(db_name)
       return @dbs[db_name].query(sql) 
     else
@@ -61,6 +61,6 @@ class DatabaseManager
 
   # queries the default database
   def query_default(sql)
-    return self.query(@default_db_name, sql)
+    return self.query(sql, @default_db_name)
   end
 end
