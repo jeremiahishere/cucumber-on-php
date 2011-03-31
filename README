@@ -27,7 +27,8 @@ Steps:
   - password: mysql user password
   - admin_user: mysql administrator user to override the default in env.rb
   - admin_password: mysql administrator password to override the default in env.rb
-  - var_name: variable name used in the conn.php file as the result of mysql_selectdb
+  - var_name: variable name used in the conn.php file as the result of mysql_select_db
+  - default: set to true or false; the one set to true is the default database
 - Setup the support/env.rb file
   - set capybara app and app_host
   - set default mysql admin user and password
