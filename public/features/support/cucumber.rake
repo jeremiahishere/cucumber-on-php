@@ -25,14 +25,13 @@ begin
       mkdir_p report_path
       %x{cucumber --format junit --out #{report_path}}
     end
-
+    
     task :setup_js_with_xvfb do
       puts "Cucumber test with Xvfb and firefox"
       ENV['DISPLAY'] = ":99"
       %x{Xvfb :99 -ac -screen 0 1024x768x16 2>/dev/null >/dev/null &}
       %x{firefox --display=:99 2>/dev/null >/dev/null &}
     end
-
 
     task :setup_js_with_vnc4server do
       puts "Cucumber test with vnc4server"
@@ -49,9 +48,9 @@ begin
 
     desc 'Run all features'
     task :all => [:ok, :wip]
-  end
 
-  task :hudson => [:setup_js_with_xvfb, :hudson_format, :kill_js]
+    task :hudson => [:setup_js_with_xvfb, :hudson_format, :kill_js]
+  end
   
   desc 'Alias for cucumber:ok'
   task :cucumber => ['cucumber:setup_js_with_xvfb', 'cucumber:ok', 'cucumber:kill_js']

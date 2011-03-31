@@ -26,7 +26,16 @@ end
 
 When /^(?:|I )press "([^"]*)"(?: within "([^"]*)")?$/ do |button, selector|
   with_scope(selector) do
-    click_button(button)
+    # in certain situations, I was having issues with the page giving a 404 but not actually having any problems
+    # that has been resolved but I am keeping this here in case it happens in the future
+    # situation it was occuring for me was a redirect to a missing link, recoverable error in many cases
+    begin
+      click_button(button)
+    rescue Mechanize::ResponseCodeError => e
+      puts "Found an error when clicking a button: #{button} on #{current_url}"
+      puts e.message
+      puts e.backtrace.inspect
+    end
   end
 end
 

@@ -63,4 +63,19 @@ class DatabaseManager
   def query_default(sql)
     return self.query(sql, @default_db_name)
   end
+
+  # returns a list of database names
+  def databases
+    return @dbs.keys
+  end
+
+  # escapes the input in the default database
+  def escape(input, db_name = @default_db_name)
+    if @dbs.has_key?(db_name)
+      return @dbs[db_name].escape(input)
+    else
+      puts "The database #{db_name} does not exist in the database manager"
+      return input
+    end
+  end
 end

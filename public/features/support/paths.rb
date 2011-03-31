@@ -3,12 +3,10 @@ module NavigationHelpers
     "http://test.yoursitehere.com" +
     case page_name
 
-    when /a page/
-      '/'
-
     when /home page/
       '/'
-
+    when /login page/
+      '/'
     when /path "(.+)"/
       $1
 

@@ -60,4 +60,10 @@ class Database
   def query(sql)
     return @mysql.query(sql)
   end
+
+  # escapes the input
+  # escape is dependent on the mysql connection object so must be done here
+  def escape(input)
+    return @mysql.escape(input)
+  end
 end

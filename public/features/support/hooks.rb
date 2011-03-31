@@ -1,24 +1,14 @@
-#usage:
-# @reset_users
-# Scenario: Create a user
-#   Given ...
-#
-Before ('@reset_users') do
-  # Save user table data
-  save_table("game_user")
+AfterStep('@debug') do |scenario|
+  puts current_url
 end
 
-After ('@reset_users') do
-  # Reload user table data
-  load_table("game_user")
+After do |scenario|
+  @@dbm.databases.each do |db|
+    @@dbm.query("show tables", db).each do |t|
+      # tables are in a hash that returns an array when you get first
+      # no idea why
+      table = t.first[1]
+      @@dbm.query("delete from #{table}", db)
+    end
+  end
 end
-
-def save_table(table_name)
-  run "mysqldump -u #{@@test_database_username} --password=#{@@test_database_password} #{@@test_database_name} #{table_name}> /tmp/#{table_name}"
-
-end
-
-def load_table(table_name)
-  run "mysql -u #{@@test_database_username} --password=#{@@test_database_password} #{@@test_database_name} < /tmp/#{table_name}"
-end
-
