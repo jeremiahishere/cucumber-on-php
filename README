@@ -69,3 +69,4 @@ Future work:
   - manage schemas to avoid generating too many
 - add a cucumber.yml with a profile so standard cucumber rake tasks can be used
 - change the location parameter in database.yml to host
+- look at file upload tests: http://rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions#attach_file-instance_method
